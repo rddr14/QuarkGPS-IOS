@@ -6,7 +6,6 @@ workflows:
 
     environment:
       vars:
-        XCODE_WORKSPACE: ""
         XCODE_PROJECT: "QuarkGPS.xcodeproj"
         XCODE_SCHEME: "QuarkGPS"
         BUNDLE_ID: "com.quarkgps.ios"
