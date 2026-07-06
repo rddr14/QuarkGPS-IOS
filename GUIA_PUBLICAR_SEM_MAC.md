@@ -11,7 +11,7 @@ Este guia foi feito para o projeto QuarkGPS iOS e funciona sem Mac local.
 
 1. Conta Apple Developer ativa (USD 99/ano)
 2. Conta App Store Connect com permissao de Admin ou App Manager
-3. Bundle Identifier unico (atual: com.quarkgps.ios)
+3. Bundle Identifier unico (atual: com.quarkgps)
 4. App icon 1024x1024 valido
 5. Politica de privacidade publica (URL)
 
@@ -31,7 +31,7 @@ Ja foi criado o arquivo:
 2. Apps > botao + > New App
 3. Plataforma: iOS
 4. Nome do app: QuarkGPS (ou o nome final)
-5. Bundle ID: com.quarkgps.ios (ou ajuste para o seu)
+5. Bundle ID: com.quarkgps (ou ajuste para o seu)
 6. SKU: codigo interno unico (exemplo: quarkgps-ios-001)
 
 ### 3) Criar chave de API do App Store Connect
