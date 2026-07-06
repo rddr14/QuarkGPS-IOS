@@ -9,6 +9,9 @@ workflows:
         XCODE_PROJECT: "QuarkGPS.xcodeproj"
         XCODE_SCHEME: "QuarkGPS"
         BUNDLE_ID: "com.quarkgps.ios"
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.quarkgps.ios
       xcode: 16.4
       cocoapods: default
 
@@ -16,6 +19,10 @@ workflows:
       app_store_connect: QuarkGPS_AppStoreConnect
 
     scripts:
+      - name: Apply code signing settings
+        script: |
+          xcode-project use-profiles
+
       - name: Set build number
         script: |
           agvtool new-version -all $BUILD_NUMBER || true
@@ -28,11 +35,11 @@ workflows:
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$CM_BUILD_DIR/build/QuarkGPS.xcarchive" \
+            CODE_SIGN_STYLE=Automatic \
             clean archive
 
       - name: Export IPA with automatic signing
         script: |
-          xcode-project use-profiles
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/build/QuarkGPS.xcarchive" \
             -exportPath "$CM_BUILD_DIR/build/export" \
