@@ -9,9 +9,6 @@ workflows:
         XCODE_PROJECT: "QuarkGPS.xcodeproj"
         XCODE_SCHEME: "QuarkGPS"
         BUNDLE_ID: "com.quarkgps"
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.quarkgps
       xcode: 16.4
       cocoapods: default
 
