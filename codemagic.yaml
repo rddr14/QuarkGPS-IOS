@@ -18,6 +18,10 @@ workflows:
       app_store_connect: QuarkGPS_AppStoreConnect
 
     scripts:
+      - name: Apply code signing settings
+        script: |
+          xcode-project use-profiles
+
       - name: Set build number
         script: |
           agvtool new-version -all $BUILD_NUMBER || true
