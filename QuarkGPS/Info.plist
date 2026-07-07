@@ -20,6 +20,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Precisamos da sua localizacao para habilitar os recursos de rastreamento no mapa.</string>
 	<key>UIApplicationSceneManifest</key>
