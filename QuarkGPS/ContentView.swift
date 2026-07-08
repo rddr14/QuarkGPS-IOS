@@ -9,7 +9,6 @@ struct ContentView: View {
             allowedHost: "rastrear.quarkgps.com",
             viewModel: viewModel
         )
-        .ignoresSafeArea()
     }
 }
 
