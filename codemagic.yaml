@@ -221,6 +221,7 @@ workflows:
         ANDROID_MODULE: "app"
         ANDROID_FLAVOR: "Quark"
         ANDROID_APPLICATION_ID: "com.quarkgps"
+        CM_KEYSTORE_PATH: "/tmp/keystore.jks"
       java: 17
       groups:
         - quarkgps
@@ -233,6 +234,10 @@ workflows:
             echo "Add your Android project into this repository and set ANDROID_PROJECT_DIR in codemagic.yaml."
             exit 1
           }
+      - name: Set up code signing
+        script: |
+          # Transforma o texto Base64 de volta no arquivo de chave físico
+          echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
 
       - name: Build Android App Bundle (release)
         script: |
