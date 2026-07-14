@@ -7,12 +7,12 @@ plugins {
 val keystorePath = System.getenv("CM_KEYSTORE_PATH")
 val keystoreAlias = System.getenv("CM_KEY_ALIAS") ?: System.getenv("CM_KEYSTORE_ALIAS")
 val keystorePassword = System.getenv("CM_KEYSTORE_PASSWORD")
-val keyPassword = System.getenv("CM_KEY_PASSWORD")
+val keyAliasPassword = System.getenv("CM_KEY_PASSWORD")
 
 val hasReleaseSigning = !keystorePath.isNullOrBlank() &&
     !keystoreAlias.isNullOrBlank() &&
     !keystorePassword.isNullOrBlank() &&
-    !keyPassword.isNullOrBlank()
+    !keyAliasPassword.isNullOrBlank()
 
 if (System.getenv("CI") == "true" && !hasReleaseSigning) {
     throw GradleException(
@@ -62,7 +62,7 @@ android {
                 storeFile = file(keystorePath!!)
                 storePassword = keystorePassword
                 keyAlias = keystoreAlias
-                keyPassword = keyPassword
+                keyPassword = keyAliasPassword
             }
         }
     }
