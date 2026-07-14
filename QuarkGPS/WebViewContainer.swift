@@ -23,7 +23,7 @@ final class WebViewViewModel: NSObject, ObservableObject {
         locationManager = manager
 
         switch manager.authorizationStatus {
-        case .notDetermined:
+        case    .notDetermined:
             manager.requestWhenInUseAuthorization()
         case .authorizedAlways, .authorizedWhenInUse:
             manager.requestLocation()
@@ -189,6 +189,91 @@ struct WebViewContainer: UIViewRepresentable {
             }
 
             decisionHandler(.allow)
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            runJavaScriptAlertPanelWithMessage message: String,
+            initiatedByFrame frame: WKFrameInfo,
+            completionHandler: @escaping () -> Void
+        ) {
+            presentAlert(title: webView.title ?? "Aviso", message: message, actions: [
+                UIAlertAction(title: "OK", style: .default) { _ in
+                    completionHandler()
+                }
+            ], fallback: completionHandler)
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            runJavaScriptConfirmPanelWithMessage message: String,
+            initiatedByFrame frame: WKFrameInfo,
+            completionHandler: @escaping (Bool) -> Void
+        ) {
+            presentAlert(title: webView.title ?? "Confirmacao", message: message, actions: [
+                UIAlertAction(title: "Cancelar", style: .cancel) { _ in
+                    completionHandler(false)
+                },
+                UIAlertAction(title: "OK", style: .default) { _ in
+                    completionHandler(true)
+                }
+            ], fallback: { completionHandler(false) })
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            runJavaScriptTextInputPanelWithPrompt prompt: String,
+            defaultText: String?,
+            initiatedByFrame frame: WKFrameInfo,
+            completionHandler: @escaping (String?) -> Void
+        ) {
+            guard let presenter = topViewController() else {
+                completionHandler(nil)
+                return
+            }
+
+            let alert = UIAlertController(title: webView.title ?? "Entrada", message: prompt, preferredStyle: .alert)
+            alert.addTextField { textField in
+                textField.text = defaultText
+            }
+            alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel) { _ in
+                completionHandler(nil)
+            })
+            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                completionHandler(alert.textFields?.first?.text)
+            })
+
+            presenter.present(alert, animated: true)
+        }
+
+        private func presentAlert(
+            title: String,
+            message: String,
+            actions: [UIAlertAction],
+            fallback: @escaping () -> Void
+        ) {
+            guard let presenter = topViewController() else {
+                fallback()
+                return
+            }
+
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            actions.forEach { alert.addAction($0) }
+            presenter.present(alert, animated: true)
+        }
+
+        private func topViewController() -> UIViewController? {
+            let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            let keyWindow = scenes
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }
+
+            var top = keyWindow?.rootViewController
+            while let presented = top?.presentedViewController {
+                top = presented
+            }
+
+            return top
         }
 
         func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {

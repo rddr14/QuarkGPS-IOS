@@ -98,10 +98,10 @@
 			};
 			buildConfigurationList = A1B2C3D41A2B3C4D5E6F7020 /* Build configuration list for PBXProject "QuarkGPS" */;
 			compatibilityVersion = "Xcode 15.0";
-			developmentRegion = en;
+			developmentRegion = "pt-BR";
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				"pt-BR",
 				Base,
 			);
 			mainGroup = A1B2C3D41A2B3C4D5E6F7005;
