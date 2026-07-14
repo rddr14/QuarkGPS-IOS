@@ -51,7 +51,7 @@ android {
         create("aura") {
             dimension = "brand"
             applicationId = "com.aurarastreamento"
-            resValue("string", "app_name", "Aura Monitoramento")
+            resValue("string", "app_name", "Aura Rastreamento")
             resValue("string", "string_site", "https://auramonitoramento.com.br")
         }
     }

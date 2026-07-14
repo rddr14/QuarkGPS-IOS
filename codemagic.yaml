@@ -115,7 +115,7 @@ workflows:
         XCODE_PROJECT: "QuarkGPS.xcodeproj"
         XCODE_SCHEME: "QuarkGPS"
         WHITE_LABEL_KEY: "auramonitoramento"
-        APP_DISPLAY_NAME: "Aura Monitoramento"
+        APP_DISPLAY_NAME: "Aura Rastreamento"
         BUNDLE_ID: "com.aurarastreamento"
         ICON_SOURCE: "branding/auramonitoramento/AppIcon-1024.png"
       ios_signing:
