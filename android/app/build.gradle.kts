@@ -32,8 +32,8 @@ android {
         applicationId = "com.quarkgps"
         minSdk = 28
         targetSdk = 36
-        versionCode = ciBuildNumber ?: 13
-        versionName = "${ciBuildNumber ?: 13}.0"
+        versionCode = 24
+        versionName = "24.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
