@@ -11,7 +11,7 @@ workflows:
         WHITE_LABEL_KEY: "quarkgps"
         APP_DISPLAY_NAME: "QuarkGPS"
         BUNDLE_ID: "com.quarkgps"
-        ICON_SOURCE: "branding/quarkgps/AppIcon-1024.png"
+          BRANDING_KEY: "quarkgps"
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.quarkgps
@@ -26,7 +26,7 @@ workflows:
         script: |
           PLIST_PATH="$CM_BUILD_DIR/QuarkGPS/Info.plist"
           APPICON_DIR="$CM_BUILD_DIR/QuarkGPS/Assets.xcassets/AppIcon.appiconset"
-          ICON_PATH="$CM_BUILD_DIR/$ICON_SOURCE"
+            ICON_PATH="$CM_BUILD_DIR/branding/$BRANDING_KEY/AppIcon-1024.png"
 
           [[ -f "$ICON_PATH" ]] || { echo "Icon file not found: $ICON_PATH"; exit 1; }
 
@@ -43,7 +43,7 @@ workflows:
           APPICON_DIR="$CM_BUILD_DIR/QuarkGPS/Assets.xcassets/AppIcon.appiconset"
           SOURCE_ICON="$APPICON_DIR/AppIcon-1024.png"
 
-          # App Store rejects alpha in the 1024 marketing icon.
+            # Use a clean 1024x1024 image with no text or alpha.
           sips -s format jpeg "$SOURCE_ICON" --out "$APPICON_DIR/AppIcon-base.jpg" >/dev/null
           sips -s format png "$APPICON_DIR/AppIcon-base.jpg" --out "$APPICON_DIR/AppIcon-1024.png" >/dev/null
           rm -f "$APPICON_DIR/AppIcon-base.jpg"
@@ -237,7 +237,7 @@ workflows:
         ANDROID_MODULE: "app"
         ANDROID_FLAVOR: "Quark"
         ANDROID_APPLICATION_ID: "com.quarkgps"
-        ANDROID_ICON_SOURCE: "branding/quarkgps/AppIcon-1024.png"
+          BRANDING_KEY: "quarkgps"
       java: 17
       groups:
         - quarkgps
@@ -252,13 +252,16 @@ workflows:
           }
       - name: Generate Android launcher icons
         script: |
-          SOURCE_ICON="$CM_BUILD_DIR/$ANDROID_ICON_SOURCE"
+            SOURCE_ICON="$CM_BUILD_DIR/branding/$BRANDING_KEY/AppIcon-1024.png"
           [[ -f "$SOURCE_ICON" ]] || { echo "Android icon source not found: $SOURCE_ICON"; exit 1; }
 
           generate_icon_set() {
             local base_dir="$1"
 
-            mkdir -p "$base_dir/mipmap-mdpi" "$base_dir/mipmap-hdpi" "$base_dir/mipmap-xhdpi" "$base_dir/mipmap-xxhdpi" "$base_dir/mipmap-xxxhdpi"
+            mkdir -p "$base_dir/drawable-nodpi" "$base_dir/mipmap-mdpi" "$base_dir/mipmap-hdpi" "$base_dir/mipmap-xhdpi" "$base_dir/mipmap-xxhdpi" "$base_dir/mipmap-xxxhdpi"
+
+              # Clean source image only; no text overlays or badges.
+            cp "$SOURCE_ICON" "$base_dir/drawable-nodpi/ic_launcher_foreground.png"
 
             # Legacy launcher icons
             sips -z 48 48 "$SOURCE_ICON" --out "$base_dir/mipmap-mdpi/ic_launcher.png" >/dev/null
@@ -276,8 +279,7 @@ workflows:
 
           }
 
-          generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/main/res"
-          generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/release/res"
+          generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/aura/res"
       - name: Validate Android signing variables
         script: |
           [[ -n "$CM_KEYSTORE_PATH" ]] || { echo "Missing CM_KEYSTORE_PATH from android_signing. Check keystore reference name in codemagic.yaml."; exit 1; }
@@ -316,13 +318,13 @@ workflows:
         ANDROID_MODULE: "app"
         ANDROID_FLAVOR: "Aura"
         ANDROID_APPLICATION_ID: "com.aurarastreamento"
-        ANDROID_ICON_SOURCE: "branding/auramonitoramento/AppIcon-1024.png"
+          BRANDING_KEY: "auramonitoramento"
       java: 17
       groups:
         - quarkgps
 
     scripts:
-      - name: Validate Android project path
+          SOURCE_ICON="$CM_BUILD_DIR/branding/$BRANDING_KEY/AppIcon-1024.png"
         script: |
           [[ -f "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/gradlew" ]] || {
             echo "Android project not found at $ANDROID_PROJECT_DIR."
@@ -330,6 +332,7 @@ workflows:
             exit 1
           }
 
+            # Clean source image only; no text overlays or badges.
       - name: Generate Android launcher icons
         script: |
           SOURCE_ICON="$CM_BUILD_DIR/$ANDROID_ICON_SOURCE"

@@ -18,6 +18,7 @@ Aplicativo iOS nativo em SwiftUI com WKWebView para abrir:
 
 - QuarkGPS.xcodeproj
 - QuarkGPS/
+- branding/<chave>/AppIcon-1024.png
 
 ## Build no Mac (Xcode)
 
@@ -42,4 +43,5 @@ Aplicativo iOS nativo em SwiftUI com WKWebView para abrir:
 ## Observacoes
 
 - O projeto foi preparado em ambiente Linux, portanto a compilacao e assinatura precisam ser feitas no Xcode no macOS.
-- O AppIcon atual vem do projeto Android e foi reaproveitado para inicializacao do projeto.
+- Para criar um novo app white-label, basta adicionar uma nova pasta em branding/<chave>/ com um AppIcon-1024.png limpo, sem texto, em 1024x1024.
+- O pipeline do Codemagic usa essa pasta de branding para gerar os icones Android e iOS automaticamente.
