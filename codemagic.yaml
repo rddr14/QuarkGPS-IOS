@@ -222,6 +222,8 @@ workflows:
         ANDROID_FLAVOR: "Quark"
         ANDROID_APPLICATION_ID: "com.quarkgps"
       java: 17
+      groups:
+        - quarkgps
 
     scripts:
       - name: Validate Android project path
