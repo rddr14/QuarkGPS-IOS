@@ -213,7 +213,7 @@ workflows:
   android-quark-release:
     name: Android Quark Release
     max_build_duration: 120
-    instance_type: linux
+    instance_type: mac_mini_m2
 
     environment:
       vars:
@@ -259,7 +259,7 @@ workflows:
   android-aura-release:
     name: Android Aura Release
     max_build_duration: 120
-    instance_type: linux
+    instance_type: mac_mini_m2
 
     environment:
       vars:
