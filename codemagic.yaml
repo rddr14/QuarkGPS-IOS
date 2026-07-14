@@ -253,7 +253,7 @@ workflows:
       # Configure this variable in Codemagic UI with Google service account JSON
       # to enable automatic Play Store publishing.
       google_play:
-        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: internal
 
   android-aura-release:
@@ -297,5 +297,5 @@ workflows:
 
     publishing:
       google_play:
-        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: internal
