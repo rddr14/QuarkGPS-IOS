@@ -8,6 +8,7 @@ val keystorePath = System.getenv("CM_KEYSTORE_PATH")
 val keystoreAlias = System.getenv("CM_KEY_ALIAS") ?: System.getenv("CM_KEYSTORE_ALIAS")
 val keystorePassword = System.getenv("CM_KEYSTORE_PASSWORD")
 val keyAliasPassword = System.getenv("CM_KEY_PASSWORD")
+val ciBuildNumber = System.getenv("BUILD_NUMBER")?.toIntOrNull()
 
 val hasReleaseSigning = !keystorePath.isNullOrBlank() &&
     !keystoreAlias.isNullOrBlank() &&
@@ -31,7 +32,7 @@ android {
         applicationId = "com.quarkgps"
         minSdk = 28
         targetSdk = 36
-        versionCode = 13
+        versionCode = ciBuildNumber ?: 13
         versionName = "13.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
