@@ -5,7 +5,7 @@ plugins {
 }
 
 val keystorePath = System.getenv("CM_KEYSTORE_PATH")
-val keystoreAlias = System.getenv("CM_KEYSTORE_ALIAS")
+val keystoreAlias = System.getenv("CM_KEY_ALIAS") ?: System.getenv("CM_KEYSTORE_ALIAS")
 val keystorePassword = System.getenv("CM_KEYSTORE_PASSWORD")
 val keyPassword = System.getenv("CM_KEY_PASSWORD")
 
