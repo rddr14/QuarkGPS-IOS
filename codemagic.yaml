@@ -260,12 +260,6 @@ workflows:
             sips -z 144 144 "$SOURCE_ICON" --out "$base_dir/mipmap-xxhdpi/ic_launcher_round.png" >/dev/null
             sips -z 192 192 "$SOURCE_ICON" --out "$base_dir/mipmap-xxxhdpi/ic_launcher_round.png" >/dev/null
 
-            # Adaptive foreground icons
-            sips -z 108 108 "$SOURCE_ICON" --out "$base_dir/mipmap-mdpi/ic_launcher_foreground.png" >/dev/null
-            sips -z 162 162 "$SOURCE_ICON" --out "$base_dir/mipmap-hdpi/ic_launcher_foreground.png" >/dev/null
-            sips -z 216 216 "$SOURCE_ICON" --out "$base_dir/mipmap-xhdpi/ic_launcher_foreground.png" >/dev/null
-            sips -z 324 324 "$SOURCE_ICON" --out "$base_dir/mipmap-xxhdpi/ic_launcher_foreground.png" >/dev/null
-            sips -z 432 432 "$SOURCE_ICON" --out "$base_dir/mipmap-xxxhdpi/ic_launcher_foreground.png" >/dev/null
           }
 
           generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/main/res"
@@ -345,12 +339,6 @@ workflows:
             sips -z 144 144 "$SOURCE_ICON" --out "$base_dir/mipmap-xxhdpi/ic_launcher_round.png" >/dev/null
             sips -z 192 192 "$SOURCE_ICON" --out "$base_dir/mipmap-xxxhdpi/ic_launcher_round.png" >/dev/null
 
-            # Adaptive foreground icons
-            sips -z 108 108 "$SOURCE_ICON" --out "$base_dir/mipmap-mdpi/ic_launcher_foreground.png" >/dev/null
-            sips -z 162 162 "$SOURCE_ICON" --out "$base_dir/mipmap-hdpi/ic_launcher_foreground.png" >/dev/null
-            sips -z 216 216 "$SOURCE_ICON" --out "$base_dir/mipmap-xhdpi/ic_launcher_foreground.png" >/dev/null
-            sips -z 324 324 "$SOURCE_ICON" --out "$base_dir/mipmap-xxhdpi/ic_launcher_foreground.png" >/dev/null
-            sips -z 432 432 "$SOURCE_ICON" --out "$base_dir/mipmap-xxxhdpi/ic_launcher_foreground.png" >/dev/null
           }
 
           generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/main/res"
