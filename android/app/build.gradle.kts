@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -10,6 +13,46 @@ val keystorePassword = System.getenv("CM_KEYSTORE_PASSWORD")
 val keyAliasPassword = System.getenv("CM_KEY_PASSWORD")
 val ciBuildNumber = System.getenv("BUILD_NUMBER")?.toIntOrNull()
 val enableMinify = System.getenv("ANDROID_ENABLE_MINIFY") == "true"
+val repoRoot = rootProject.projectDir.parentFile
+
+data class BrandingConfig(
+    val key: String,
+    val appName: String,
+    val siteURL: String,
+    val allowedHost: String,
+    val androidApplicationId: String,
+)
+
+fun loadBrandingConfig(brandingKey: String): BrandingConfig {
+    val brandingFile = repoRoot.resolve("branding/$brandingKey/Branding.properties")
+    if (!brandingFile.isFile) {
+        throw GradleException("Branding file not found: ${brandingFile.absolutePath}")
+    }
+
+    val properties = Properties()
+    FileInputStream(brandingFile).use { input ->
+        properties.load(input)
+    }
+
+    fun required(name: String): String {
+        return properties.getProperty(name)?.trim().orEmpty().also {
+            if (it.isBlank()) {
+                throw GradleException("Missing '$name' in ${brandingFile.absolutePath}")
+            }
+        }
+    }
+
+    return BrandingConfig(
+        key = required("key"),
+        appName = required("appName"),
+        siteURL = required("siteURL"),
+        allowedHost = required("allowedHost"),
+        androidApplicationId = required("androidApplicationId")
+    )
+}
+
+val quarkBranding = loadBrandingConfig("quarkgps")
+val auraBranding = loadBrandingConfig("auramonitoramento")
 
 val hasReleaseSigning = !keystorePath.isNullOrBlank() &&
     !keystoreAlias.isNullOrBlank() &&
@@ -30,7 +73,7 @@ android {
     flavorDimensions += "brand"
 
     defaultConfig {
-        applicationId = "com.quarkgps"
+        applicationId = quarkBranding.androidApplicationId
         minSdk = 28
         targetSdk = 36
         versionCode = 25
@@ -45,16 +88,16 @@ android {
     productFlavors {
         create("quark") {
             dimension = "brand"
-            applicationId = "com.quarkgps"
-            resValue("string", "app_name", "QuarkGPS")
-            resValue("string", "string_site", "https://rastrear.quarkgps.com")
+            applicationId = quarkBranding.androidApplicationId
+            resValue("string", "app_name", quarkBranding.appName)
+            resValue("string", "string_site", quarkBranding.siteURL)
         }
 
         create("aura") {
             dimension = "brand"
-            applicationId = "com.aurarastreamento"
-            resValue("string", "app_name", "Aura Rastreamento")
-            resValue("string", "string_site", "https://auramonitoramento.com.br")
+            applicationId = auraBranding.androidApplicationId
+            resValue("string", "app_name", auraBranding.appName)
+            resValue("string", "string_site", auraBranding.siteURL)
         }
     }
 

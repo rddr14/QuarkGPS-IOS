@@ -26,9 +26,17 @@ workflows:
         script: |
           PLIST_PATH="$CM_BUILD_DIR/QuarkGPS/Info.plist"
           APPICON_DIR="$CM_BUILD_DIR/QuarkGPS/Assets.xcassets/AppIcon.appiconset"
-          ICON_PATH="$CM_BUILD_DIR/branding/$BRANDING_KEY/AppIcon-1024.png"
+          BRANDING_DIR="$CM_BUILD_DIR/branding/$BRANDING_KEY"
+          BRANDING_FILE="$BRANDING_DIR/Branding.properties"
+          ICON_PATH="$BRANDING_DIR/AppIcon-1024.png"
 
+          [[ -f "$BRANDING_FILE" ]] || { echo "Branding file not found: $BRANDING_FILE"; exit 1; }
           [[ -f "$ICON_PATH" ]] || { echo "Icon file not found: $ICON_PATH"; exit 1; }
+
+          cp "$BRANDING_FILE" "$CM_BUILD_DIR/QuarkGPS/Branding.properties"
+
+          APP_DISPLAY_NAME="$(awk -F= '$1=="appName" { print $2 }' "$BRANDING_FILE")"
+          WHITE_LABEL_KEY="$(awk -F= '$1=="key" { print $2 }' "$BRANDING_FILE")"
 
           /usr/libexec/PlistBuddy -c "Set :WhiteLabelKey $WHITE_LABEL_KEY" "$PLIST_PATH" || \
             /usr/libexec/PlistBuddy -c "Add :WhiteLabelKey string $WHITE_LABEL_KEY" "$PLIST_PATH"
@@ -72,6 +80,7 @@ workflows:
       - name: Configure bundle identifier
         script: |
           PBXPROJ_PATH="$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+          BUNDLE_ID="$(awk -F= '$1=="iosBundleId" { print $2 }' "$CM_BUILD_DIR/branding/$BRANDING_KEY/Branding.properties")"
           sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = com\\.quarkgps;/PRODUCT_BUNDLE_IDENTIFIER = $BUNDLE_ID;/g" "$PBXPROJ_PATH"
 
       - name: Apply code signing settings
@@ -84,6 +93,7 @@ workflows:
 
       - name: Build archive
         script: |
+          BUNDLE_ID="$(awk -F= '$1=="iosBundleId" { print $2 }' "$CM_BUILD_DIR/branding/$BRANDING_KEY/Branding.properties")"
           xcodebuild \
             -project "$XCODE_PROJECT" \
             -scheme "$XCODE_SCHEME" \
@@ -139,9 +149,17 @@ workflows:
         script: |
           PLIST_PATH="$CM_BUILD_DIR/QuarkGPS/Info.plist"
           APPICON_DIR="$CM_BUILD_DIR/QuarkGPS/Assets.xcassets/AppIcon.appiconset"
-          ICON_PATH="$CM_BUILD_DIR/branding/$BRANDING_KEY/AppIcon-1024.png"
+          BRANDING_DIR="$CM_BUILD_DIR/branding/$BRANDING_KEY"
+          BRANDING_FILE="$BRANDING_DIR/Branding.properties"
+          ICON_PATH="$BRANDING_DIR/AppIcon-1024.png"
 
+          [[ -f "$BRANDING_FILE" ]] || { echo "Branding file not found: $BRANDING_FILE"; exit 1; }
           [[ -f "$ICON_PATH" ]] || { echo "Icon file not found: $ICON_PATH"; exit 1; }
+
+          cp "$BRANDING_FILE" "$CM_BUILD_DIR/QuarkGPS/Branding.properties"
+
+          APP_DISPLAY_NAME="$(awk -F= '$1=="appName" { print $2 }' "$BRANDING_FILE")"
+          WHITE_LABEL_KEY="$(awk -F= '$1=="key" { print $2 }' "$BRANDING_FILE")"
 
           /usr/libexec/PlistBuddy -c "Set :WhiteLabelKey $WHITE_LABEL_KEY" "$PLIST_PATH" || \
             /usr/libexec/PlistBuddy -c "Add :WhiteLabelKey string $WHITE_LABEL_KEY" "$PLIST_PATH"
@@ -184,6 +202,7 @@ workflows:
       - name: Configure bundle identifier
         script: |
           PBXPROJ_PATH="$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
+          BUNDLE_ID="$(awk -F= '$1=="iosBundleId" { print $2 }' "$CM_BUILD_DIR/branding/$BRANDING_KEY/Branding.properties")"
           sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = com\\.quarkgps;/PRODUCT_BUNDLE_IDENTIFIER = $BUNDLE_ID;/g" "$PBXPROJ_PATH"
 
       - name: Apply code signing settings
@@ -196,6 +215,7 @@ workflows:
 
       - name: Build archive
         script: |
+          BUNDLE_ID="$(awk -F= '$1=="iosBundleId" { print $2 }' "$CM_BUILD_DIR/branding/$BRANDING_KEY/Branding.properties")"
           xcodebuild \
             -project "$XCODE_PROJECT" \
             -scheme "$XCODE_SCHEME" \
