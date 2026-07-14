@@ -92,6 +92,7 @@ fun loadBrandingConfig(brandingKey: String): BrandingConfig {
 
 val quarkBranding = loadBrandingConfig("quarkgps")
 val auraBranding = loadBrandingConfig("auramonitoramento")
+val rmBranding = loadBrandingConfig("rmrastreadores")
 
 val hasReleaseSigning = !keystorePath.isNullOrBlank() &&
     !keystoreAlias.isNullOrBlank() &&
@@ -141,6 +142,15 @@ android {
             versionName = auraBranding.androidVersionName
             resValue("string", "app_name", auraBranding.appName)
             resValue("string", "string_site", auraBranding.siteURL)
+        }
+
+        create("rm") {
+            dimension = "brand"
+            applicationId = rmBranding.androidApplicationId
+            versionCode = rmBranding.androidVersionCode
+            versionName = rmBranding.androidVersionName
+            resValue("string", "app_name", rmBranding.appName)
+            resValue("string", "string_site", rmBranding.siteURL)
         }
     }
 

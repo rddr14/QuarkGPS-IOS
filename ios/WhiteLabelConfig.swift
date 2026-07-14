@@ -22,6 +22,12 @@ enum WhiteLabelResolver {
             appName: "Aura Monitoramento",
             siteURL: URL(string: "https://auramonitoramento.com.br")!,
             allowedHost: "auramonitoramento.com.br"
+        ),
+        "rmrastreadores": WhiteLabelConfig(
+            key: "rmrastreadores",
+            appName: "RM Rastreadores",
+            siteURL: URL(string: "https://rastrear.rmrastreadores.com/")!,
+            allowedHost: "rastrear.rmrastreadores.com"
         )
     ]
 
