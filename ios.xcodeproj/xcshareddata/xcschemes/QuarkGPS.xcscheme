@@ -17,7 +17,7 @@
                BlueprintIdentifier = "A1B2C3D41A2B3C4D5E6F7001"
                BuildableName = "QuarkGPS.app"
                BlueprintName = "QuarkGPS"
-               ReferencedContainer = "container:QuarkGPS.xcodeproj">
+               ReferencedContainer = "container:ios.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,7 +47,7 @@
             BlueprintIdentifier = "A1B2C3D41A2B3C4D5E6F7001"
             BuildableName = "QuarkGPS.app"
             BlueprintName = "QuarkGPS"
-            ReferencedContainer = "container:QuarkGPS.xcodeproj">
+            ReferencedContainer = "container:ios.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -64,7 +64,7 @@
             BlueprintIdentifier = "A1B2C3D41A2B3C4D5E6F7001"
             BuildableName = "QuarkGPS.app"
             BlueprintName = "QuarkGPS"
-            ReferencedContainer = "container:QuarkGPS.xcodeproj">
+            ReferencedContainer = "container:ios.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

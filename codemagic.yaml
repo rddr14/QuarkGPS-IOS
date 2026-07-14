@@ -6,7 +6,7 @@ workflows:
 
     environment:
       vars:
-        XCODE_PROJECT: "QuarkGPS.xcodeproj"
+        XCODE_PROJECT: "ios.xcodeproj"
         XCODE_SCHEME: "QuarkGPS"
         WHITE_LABEL_KEY: "quarkgps"
         APP_DISPLAY_NAME: "QuarkGPS"
@@ -24,8 +24,8 @@ workflows:
     scripts:
       - name: Configure white-label values
         script: |
-          PLIST_PATH="$CM_BUILD_DIR/QuarkGPS/Info.plist"
-          APPICON_DIR="$CM_BUILD_DIR/QuarkGPS/Assets.xcassets/AppIcon.appiconset"
+          PLIST_PATH="$CM_BUILD_DIR/ios/Info.plist"
+          APPICON_DIR="$CM_BUILD_DIR/ios/Assets.xcassets/AppIcon.appiconset"
           BRANDING_DIR="$CM_BUILD_DIR/branding/$BRANDING_KEY"
           BRANDING_FILE="$BRANDING_DIR/Branding.properties"
           ICON_PATH="$BRANDING_DIR/AppIcon-1024.png"
@@ -33,7 +33,7 @@ workflows:
           [[ -f "$BRANDING_FILE" ]] || { echo "Branding file not found: $BRANDING_FILE"; exit 1; }
           [[ -f "$ICON_PATH" ]] || { echo "Icon file not found: $ICON_PATH"; exit 1; }
 
-          cp "$BRANDING_FILE" "$CM_BUILD_DIR/QuarkGPS/Branding.properties"
+          cp "$BRANDING_FILE" "$CM_BUILD_DIR/ios/Branding.properties"
 
           APP_DISPLAY_NAME="$(awk -F= '$1=="appName" { print $2 }' "$BRANDING_FILE")"
           WHITE_LABEL_KEY="$(awk -F= '$1=="key" { print $2 }' "$BRANDING_FILE")"
@@ -48,7 +48,7 @@ workflows:
 
       - name: Generate complete App Icons (no alpha)
         script: |
-          APPICON_DIR="$CM_BUILD_DIR/QuarkGPS/Assets.xcassets/AppIcon.appiconset"
+          APPICON_DIR="$CM_BUILD_DIR/ios/Assets.xcassets/AppIcon.appiconset"
           SOURCE_ICON="$APPICON_DIR/AppIcon-1024.png"
 
           # Use a clean 1024x1024 image with no text or alpha.
@@ -87,9 +87,14 @@ workflows:
         script: |
           xcode-project use-profiles --archive-method app-store --code-signing-setup-verbose-logging
 
-      - name: Set build number
+      - name: Set iOS version numbers
         script: |
-          agvtool new-version -all $BUILD_NUMBER || true
+          BRANDING_FILE="$CM_BUILD_DIR/branding/$BRANDING_KEY/Branding.properties"
+          IOS_MARKETING_VERSION="$(awk -F= '$1=="iosMarketingVersion" { print $2 }' "$BRANDING_FILE")"
+
+          [[ -n "$IOS_MARKETING_VERSION" ]] || { echo "Missing iosMarketingVersion in $BRANDING_FILE"; exit 1; }
+          agvtool new-marketing-version "$IOS_MARKETING_VERSION" || true
+          agvtool new-version -all "$BUILD_NUMBER" || true
 
       - name: Build archive
         script: |
@@ -129,7 +134,7 @@ workflows:
 
     environment:
       vars:
-        XCODE_PROJECT: "QuarkGPS.xcodeproj"
+        XCODE_PROJECT: "ios.xcodeproj"
         XCODE_SCHEME: "QuarkGPS"
         WHITE_LABEL_KEY: "auramonitoramento"
         APP_DISPLAY_NAME: "Aura Rastreamento"
@@ -147,8 +152,8 @@ workflows:
     scripts:
       - name: Configure white-label values
         script: |
-          PLIST_PATH="$CM_BUILD_DIR/QuarkGPS/Info.plist"
-          APPICON_DIR="$CM_BUILD_DIR/QuarkGPS/Assets.xcassets/AppIcon.appiconset"
+          PLIST_PATH="$CM_BUILD_DIR/ios/Info.plist"
+          APPICON_DIR="$CM_BUILD_DIR/ios/Assets.xcassets/AppIcon.appiconset"
           BRANDING_DIR="$CM_BUILD_DIR/branding/$BRANDING_KEY"
           BRANDING_FILE="$BRANDING_DIR/Branding.properties"
           ICON_PATH="$BRANDING_DIR/AppIcon-1024.png"
@@ -156,7 +161,7 @@ workflows:
           [[ -f "$BRANDING_FILE" ]] || { echo "Branding file not found: $BRANDING_FILE"; exit 1; }
           [[ -f "$ICON_PATH" ]] || { echo "Icon file not found: $ICON_PATH"; exit 1; }
 
-          cp "$BRANDING_FILE" "$CM_BUILD_DIR/QuarkGPS/Branding.properties"
+          cp "$BRANDING_FILE" "$CM_BUILD_DIR/ios/Branding.properties"
 
           APP_DISPLAY_NAME="$(awk -F= '$1=="appName" { print $2 }' "$BRANDING_FILE")"
           WHITE_LABEL_KEY="$(awk -F= '$1=="key" { print $2 }' "$BRANDING_FILE")"
@@ -171,7 +176,7 @@ workflows:
 
       - name: Generate complete App Icons (no alpha)
         script: |
-          APPICON_DIR="$CM_BUILD_DIR/QuarkGPS/Assets.xcassets/AppIcon.appiconset"
+          APPICON_DIR="$CM_BUILD_DIR/ios/Assets.xcassets/AppIcon.appiconset"
           SOURCE_ICON="$APPICON_DIR/AppIcon-1024.png"
 
           sips -s format jpeg "$SOURCE_ICON" --out "$APPICON_DIR/AppIcon-base.jpg" >/dev/null
@@ -209,9 +214,14 @@ workflows:
         script: |
           xcode-project use-profiles --archive-method app-store --code-signing-setup-verbose-logging
 
-      - name: Set build number
+      - name: Set iOS version numbers
         script: |
-          agvtool new-version -all $BUILD_NUMBER || true
+          BRANDING_FILE="$CM_BUILD_DIR/branding/$BRANDING_KEY/Branding.properties"
+          IOS_MARKETING_VERSION="$(awk -F= '$1=="iosMarketingVersion" { print $2 }' "$BRANDING_FILE")"
+
+          [[ -n "$IOS_MARKETING_VERSION" ]] || { echo "Missing iosMarketingVersion in $BRANDING_FILE"; exit 1; }
+          agvtool new-marketing-version "$IOS_MARKETING_VERSION" || true
+          agvtool new-version -all "$BUILD_NUMBER" || true
 
       - name: Build archive
         script: |
@@ -245,7 +255,7 @@ workflows:
         submit_to_app_store: false
 
   android-quark-release:
-    name: Android Quark Release
+    name: Android Quark Release (publicar)
     max_build_duration: 120
     instance_type: mac_mini_m2
 
@@ -330,7 +340,7 @@ workflows:
         track: internal
 
   android-aura-release:
-    name: Android Aura Release
+    name: Android Aura Release (publicar)
     max_build_duration: 120
     instance_type: mac_mini_m2
 
@@ -411,3 +421,155 @@ workflows:
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: internal
+
+  android-quark-artifact:
+    name: Android Quark Artfact (So APK)
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    environment:
+      android_signing:
+        - QuarKGPS
+      vars:
+        ANDROID_PROJECT_DIR: "android"
+        ANDROID_MODULE: "app"
+        ANDROID_FLAVOR: "Quark"
+        ANDROID_FLAVOR_SOURCE_SET: "quark"
+        ANDROID_APPLICATION_ID: "com.quarkgps"
+        BRANDING_KEY: "quarkgps"
+      java: 17
+      groups:
+        - quarkgps
+
+    scripts:
+      - name: Validate Android project path
+        script: |
+          [[ -f "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/gradlew" ]] || {
+            echo "Android project not found at $ANDROID_PROJECT_DIR."
+            echo "Add your Android project into this repository and set ANDROID_PROJECT_DIR in codemagic.yaml."
+            exit 1
+          }
+
+      - name: Generate Android launcher icons
+        script: |
+          SOURCE_ICON="$CM_BUILD_DIR/branding/$BRANDING_KEY/AppIcon-1024.png"
+          [[ -f "$SOURCE_ICON" ]] || { echo "Android icon source not found: $SOURCE_ICON"; exit 1; }
+
+          generate_icon_set() {
+            local base_dir="$1"
+
+            mkdir -p "$base_dir/drawable-nodpi" "$base_dir/mipmap-mdpi" "$base_dir/mipmap-hdpi" "$base_dir/mipmap-xhdpi" "$base_dir/mipmap-xxhdpi" "$base_dir/mipmap-xxxhdpi"
+
+            # Clean source image only; no text overlays or badges.
+            cp "$SOURCE_ICON" "$base_dir/drawable-nodpi/ic_launcher_foreground.png"
+
+            # Legacy launcher icons
+            sips -z 48 48 "$SOURCE_ICON" --out "$base_dir/mipmap-mdpi/ic_launcher.png" >/dev/null
+            sips -z 72 72 "$SOURCE_ICON" --out "$base_dir/mipmap-hdpi/ic_launcher.png" >/dev/null
+            sips -z 96 96 "$SOURCE_ICON" --out "$base_dir/mipmap-xhdpi/ic_launcher.png" >/dev/null
+            sips -z 144 144 "$SOURCE_ICON" --out "$base_dir/mipmap-xxhdpi/ic_launcher.png" >/dev/null
+            sips -z 192 192 "$SOURCE_ICON" --out "$base_dir/mipmap-xxxhdpi/ic_launcher.png" >/dev/null
+
+            # Round launcher icons
+            sips -z 48 48 "$SOURCE_ICON" --out "$base_dir/mipmap-mdpi/ic_launcher_round.png" >/dev/null
+            sips -z 72 72 "$SOURCE_ICON" --out "$base_dir/mipmap-hdpi/ic_launcher_round.png" >/dev/null
+            sips -z 96 96 "$SOURCE_ICON" --out "$base_dir/mipmap-xhdpi/ic_launcher_round.png" >/dev/null
+            sips -z 144 144 "$SOURCE_ICON" --out "$base_dir/mipmap-xxhdpi/ic_launcher_round.png" >/dev/null
+            sips -z 192 192 "$SOURCE_ICON" --out "$base_dir/mipmap-xxxhdpi/ic_launcher_round.png" >/dev/null
+          }
+
+          generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/main/res"
+          generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/$ANDROID_FLAVOR_SOURCE_SET/res"
+
+      - name: Validate Android signing variables
+        script: |
+          [[ -n "$CM_KEYSTORE_PATH" ]] || { echo "Missing CM_KEYSTORE_PATH from android_signing. Check keystore reference name in codemagic.yaml."; exit 1; }
+          [[ -f "$CM_KEYSTORE_PATH" ]] || { echo "Keystore file not found at CM_KEYSTORE_PATH=$CM_KEYSTORE_PATH"; exit 1; }
+          [[ -n "$CM_KEYSTORE_PASSWORD" ]] || { echo "Missing CM_KEYSTORE_PASSWORD from android_signing."; exit 1; }
+          [[ -n "$CM_KEY_ALIAS" || -n "$CM_KEYSTORE_ALIAS" ]] || { echo "Missing key alias from android_signing (CM_KEY_ALIAS/CM_KEYSTORE_ALIAS)."; exit 1; }
+          [[ -n "$CM_KEY_PASSWORD" ]] || { echo "Missing CM_KEY_PASSWORD from android_signing."; exit 1; }
+
+      - name: Build Android APK (release)
+        script: |
+          cd "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR"
+          chmod +x gradlew
+          ./gradlew clean :$ANDROID_MODULE:assemble${ANDROID_FLAVOR}Release
+
+    artifacts:
+      - "$ANDROID_PROJECT_DIR/$ANDROID_MODULE/build/outputs/**/*.apk"
+
+  android-aura-artifact:
+    name: Android Aura Artfact (So APK)
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    environment:
+      android_signing:
+        - QuarKGPS
+      vars:
+        ANDROID_PROJECT_DIR: "android"
+        ANDROID_MODULE: "app"
+        ANDROID_FLAVOR: "Aura"
+        ANDROID_FLAVOR_SOURCE_SET: "aura"
+        ANDROID_APPLICATION_ID: "com.aurarastreamento"
+        BRANDING_KEY: "auramonitoramento"
+      java: 17
+      groups:
+        - quarkgps
+
+    scripts:
+      - name: Validate Android project path
+        script: |
+          [[ -f "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/gradlew" ]] || {
+            echo "Android project not found at $ANDROID_PROJECT_DIR."
+            echo "Add your Android project into this repository and set ANDROID_PROJECT_DIR in codemagic.yaml."
+            exit 1
+          }
+
+      - name: Generate Android launcher icons
+        script: |
+          SOURCE_ICON="$CM_BUILD_DIR/branding/$BRANDING_KEY/AppIcon-1024.png"
+          [[ -f "$SOURCE_ICON" ]] || { echo "Android icon source not found: $SOURCE_ICON"; exit 1; }
+
+          generate_icon_set() {
+            local base_dir="$1"
+
+            mkdir -p "$base_dir/drawable-nodpi" "$base_dir/mipmap-mdpi" "$base_dir/mipmap-hdpi" "$base_dir/mipmap-xhdpi" "$base_dir/mipmap-xxhdpi" "$base_dir/mipmap-xxxhdpi"
+
+            # Clean source image only; no text overlays or badges.
+            cp "$SOURCE_ICON" "$base_dir/drawable-nodpi/ic_launcher_foreground.png"
+
+            # Legacy launcher icons
+            sips -z 48 48 "$SOURCE_ICON" --out "$base_dir/mipmap-mdpi/ic_launcher.png" >/dev/null
+            sips -z 72 72 "$SOURCE_ICON" --out "$base_dir/mipmap-hdpi/ic_launcher.png" >/dev/null
+            sips -z 96 96 "$SOURCE_ICON" --out "$base_dir/mipmap-xhdpi/ic_launcher.png" >/dev/null
+            sips -z 144 144 "$SOURCE_ICON" --out "$base_dir/mipmap-xxhdpi/ic_launcher.png" >/dev/null
+            sips -z 192 192 "$SOURCE_ICON" --out "$base_dir/mipmap-xxxhdpi/ic_launcher.png" >/dev/null
+
+            # Round launcher icons
+            sips -z 48 48 "$SOURCE_ICON" --out "$base_dir/mipmap-mdpi/ic_launcher_round.png" >/dev/null
+            sips -z 72 72 "$SOURCE_ICON" --out "$base_dir/mipmap-hdpi/ic_launcher_round.png" >/dev/null
+            sips -z 96 96 "$SOURCE_ICON" --out "$base_dir/mipmap-xhdpi/ic_launcher_round.png" >/dev/null
+            sips -z 144 144 "$SOURCE_ICON" --out "$base_dir/mipmap-xxhdpi/ic_launcher_round.png" >/dev/null
+            sips -z 192 192 "$SOURCE_ICON" --out "$base_dir/mipmap-xxxhdpi/ic_launcher_round.png" >/dev/null
+          }
+
+          generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/main/res"
+          generate_icon_set "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR/app/src/$ANDROID_FLAVOR_SOURCE_SET/res"
+
+      - name: Validate Android signing variables
+        script: |
+          [[ -n "$CM_KEYSTORE_PATH" ]] || { echo "Missing CM_KEYSTORE_PATH from android_signing. Check keystore reference name in codemagic.yaml."; exit 1; }
+          [[ -f "$CM_KEYSTORE_PATH" ]] || { echo "Keystore file not found at CM_KEYSTORE_PATH=$CM_KEYSTORE_PATH"; exit 1; }
+          [[ -n "$CM_KEYSTORE_PASSWORD" ]] || { echo "Missing CM_KEYSTORE_PASSWORD from android_signing."; exit 1; }
+          [[ -n "$CM_KEY_ALIAS" || -n "$CM_KEYSTORE_ALIAS" ]] || { echo "Missing key alias from android_signing (CM_KEY_ALIAS/CM_KEYSTORE_ALIAS)."; exit 1; }
+          [[ -n "$CM_KEY_PASSWORD" ]] || { echo "Missing CM_KEY_PASSWORD from android_signing."; exit 1; }
+
+      - name: Build Android APK (release)
+        script: |
+          cd "$CM_BUILD_DIR/$ANDROID_PROJECT_DIR"
+          chmod +x gradlew
+          ./gradlew clean :$ANDROID_MODULE:assemble${ANDROID_FLAVOR}Release
+
+    artifacts:
+      - "$ANDROID_PROJECT_DIR/$ANDROID_MODULE/build/outputs/**/*.apk"

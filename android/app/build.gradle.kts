@@ -21,6 +21,8 @@ data class BrandingConfig(
     val siteURL: String,
     val allowedHost: String,
     val androidApplicationId: String,
+    val androidVersionCode: Int,
+    val androidVersionName: String,
 )
 
 fun loadBrandingConfig(brandingKey: String): BrandingConfig {
@@ -34,12 +36,46 @@ fun loadBrandingConfig(brandingKey: String): BrandingConfig {
         properties.load(input)
     }
 
-    fun required(name: String): String {
-        return properties.getProperty(name)?.trim().orEmpty().also {
-            if (it.isBlank()) {
-                throw GradleException("Missing '$name' in ${brandingFile.absolutePath}")
+    fun resolvePlaceholders(value: String): String {
+        val placeholderRegex = Regex("\\$\\{([^}]+)}")
+        var resolved = value
+
+        repeat(10) {
+            val next = placeholderRegex.replace(resolved) { match ->
+                val propertyName = match.groupValues[1]
+                properties.getProperty(propertyName)?.trim()
+                    ?: throw GradleException(
+                        "Unknown placeholder '$propertyName' in ${brandingFile.absolutePath}"
+                    )
             }
+
+            if (next == resolved) {
+                return@repeat
+            }
+            resolved = next
         }
+
+        if (placeholderRegex.containsMatchIn(resolved)) {
+            throw GradleException(
+                "Unresolved placeholders in branding value '$value' from ${brandingFile.absolutePath}"
+            )
+        }
+
+        return resolved
+    }
+
+    fun required(name: String): String {
+        val rawValue = properties.getProperty(name)?.trim().orEmpty()
+        if (rawValue.isBlank()) {
+            throw GradleException("Missing '$name' in ${brandingFile.absolutePath}")
+        }
+
+        val resolvedValue = resolvePlaceholders(rawValue)
+        if (resolvedValue.isBlank()) {
+            throw GradleException("Missing '$name' in ${brandingFile.absolutePath}")
+        }
+
+        return resolvedValue
     }
 
     return BrandingConfig(
@@ -47,7 +83,10 @@ fun loadBrandingConfig(brandingKey: String): BrandingConfig {
         appName = required("appName"),
         siteURL = required("siteURL"),
         allowedHost = required("allowedHost"),
-        androidApplicationId = required("androidApplicationId")
+        androidApplicationId = required("androidApplicationId"),
+        androidVersionCode = required("androidVersionCode").toIntOrNull()
+            ?: throw GradleException("Invalid 'androidVersionCode' in ${brandingFile.absolutePath}"),
+        androidVersionName = required("androidVersionName")
     )
 }
 
@@ -76,8 +115,8 @@ android {
         applicationId = quarkBranding.androidApplicationId
         minSdk = 28
         targetSdk = 36
-        versionCode = 25
-        versionName = "25.0"
+        versionCode = quarkBranding.androidVersionCode
+        versionName = quarkBranding.androidVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -89,6 +128,8 @@ android {
         create("quark") {
             dimension = "brand"
             applicationId = quarkBranding.androidApplicationId
+            versionCode = quarkBranding.androidVersionCode
+            versionName = quarkBranding.androidVersionName
             resValue("string", "app_name", quarkBranding.appName)
             resValue("string", "string_site", quarkBranding.siteURL)
         }
@@ -96,6 +137,8 @@ android {
         create("aura") {
             dimension = "brand"
             applicationId = auraBranding.androidApplicationId
+            versionCode = auraBranding.androidVersionCode
+            versionName = auraBranding.androidVersionName
             resValue("string", "app_name", auraBranding.appName)
             resValue("string", "string_site", auraBranding.siteURL)
         }

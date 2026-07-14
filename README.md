@@ -16,15 +16,15 @@ Aplicativo iOS nativo em SwiftUI com WKWebView para abrir:
 
 ## Estrutura
 
-- QuarkGPS.xcodeproj
-- QuarkGPS/
+- ios.xcodeproj
+- ios/
 - branding/<chave>/Branding.properties
 - branding/<chave>/AppIcon-1024.png
 
 ## Build no Mac (Xcode)
 
 1. Copie esta pasta para um Mac com Xcode 16+
-2. Abra QuarkGPS.xcodeproj
+2. Abra ios.xcodeproj
 3. Em Signing & Capabilities:
    - Defina seu Team
    - Ajuste o Bundle Identifier se necessario

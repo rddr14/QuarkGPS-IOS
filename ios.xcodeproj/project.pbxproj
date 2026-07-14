@@ -64,7 +64,7 @@
 				A1B2C3D41A2B3C4D5E6F700A /* Assets.xcassets */,
 				A1B2C3D41A2B3C4D5E6F700B /* Info.plist */,
 			);
-			path = QuarkGPS;
+			path = ios;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -247,7 +247,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = M3RRQDGWVC;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = QuarkGPS/Info.plist;
+				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -272,7 +272,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = M3RRQDGWVC;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = QuarkGPS/Info.plist;
+				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
