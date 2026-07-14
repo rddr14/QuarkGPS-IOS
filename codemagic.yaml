@@ -294,6 +294,7 @@ workflows:
     artifacts:
       - "$ANDROID_PROJECT_DIR/$ANDROID_MODULE/build/outputs/**/*.aab"
       - "$ANDROID_PROJECT_DIR/$ANDROID_MODULE/build/outputs/**/*.apk"
+      - "$ANDROID_PROJECT_DIR/$ANDROID_MODULE/build/outputs/mapping/**/*.txt"
 
     publishing:
       # Configure this variable in Codemagic UI with Google service account JSON
@@ -375,6 +376,7 @@ workflows:
     artifacts:
       - "$ANDROID_PROJECT_DIR/$ANDROID_MODULE/build/outputs/**/*.aab"
       - "$ANDROID_PROJECT_DIR/$ANDROID_MODULE/build/outputs/**/*.apk"
+      - "$ANDROID_PROJECT_DIR/$ANDROID_MODULE/build/outputs/mapping/**/*.txt"
 
     publishing:
       google_play:

@@ -9,6 +9,7 @@ val keystoreAlias = System.getenv("CM_KEY_ALIAS") ?: System.getenv("CM_KEYSTORE_
 val keystorePassword = System.getenv("CM_KEYSTORE_PASSWORD")
 val keyAliasPassword = System.getenv("CM_KEY_PASSWORD")
 val ciBuildNumber = System.getenv("BUILD_NUMBER")?.toIntOrNull()
+val enableMinify = System.getenv("ANDROID_ENABLE_MINIFY") == "true"
 
 val hasReleaseSigning = !keystorePath.isNullOrBlank() &&
     !keystoreAlias.isNullOrBlank() &&
@@ -70,7 +71,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = enableMinify
+            isShrinkResources = enableMinify
             if (hasReleaseSigning) {
                 signingConfig = signingConfigs.getByName("release")
             }
