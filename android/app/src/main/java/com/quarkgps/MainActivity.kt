@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.location.LocationManager
 import android.net.Uri
 import android.net.http.SslError
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         site = getString(R.string.string_site)
         setContentView(R.layout.activity_main)
+        configureSystemBarsForTheme()
 
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         // Inicialização da WebView logo após a definição do layout
@@ -144,6 +146,16 @@ class MainActivity : AppCompatActivity() {
         } else {
             requestLocationPermission()
         }
+    }
+
+    private fun configureSystemBarsForTheme() {
+        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+            Configuration.UI_MODE_NIGHT_YES
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+
+        // Em tema claro, usa icones escuros para manter contraste na barra de status.
+        insetsController.isAppearanceLightStatusBars = !isDarkTheme
+        insetsController.isAppearanceLightNavigationBars = !isDarkTheme
     }
 
 
