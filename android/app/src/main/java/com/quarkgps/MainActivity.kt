@@ -5,7 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
+import android.graphics.Color
 import android.location.LocationManager
 import android.net.Uri
 import android.net.http.SslError
@@ -149,13 +149,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureSystemBarsForTheme() {
-        val isDarkTheme = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-            Configuration.UI_MODE_NIGHT_YES
+        window.statusBarColor = Color.BLACK
+        window.navigationBarColor = Color.BLACK
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
 
-        // Em tema claro, usa icones escuros para manter contraste na barra de status.
-        insetsController.isAppearanceLightStatusBars = !isDarkTheme
-        insetsController.isAppearanceLightNavigationBars = !isDarkTheme
+        // Mantem contraste alto em qualquer tema do aparelho.
+        insetsController.isAppearanceLightStatusBars = false
+        insetsController.isAppearanceLightNavigationBars = false
     }
 
 
